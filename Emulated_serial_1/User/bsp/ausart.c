@@ -5,8 +5,15 @@ uint32_t  sometime = 0;
 
 uint8_t recvStat = COM_STOP_BIT;			//定义状态机
 uint8_t recvData;
-uint8_t val = 'A'; 
+uint8_t val = 'A';
 uint8_t testA = 'A';
+
+
+
+uint8_t EmulateSerialBuf[GPS_RX_LEN]; //
+uint16_t EmulateSerialLen = 0;
+uint16_t EmulateSerialRx = 0; //接收自增
+uint16_t RemainDataNum = 0;
 
 void TimeTest()//定时器发送
 {
@@ -16,41 +23,50 @@ void TimeTest()//定时器发送
         recvStat++;				   //改变状态机
         if(recvStat == 10) 		   //收到停止位  /定时器发送测试
         {
-						recvStat = 0;   //定时器发送测试
-						//testA = 'A';
-						COM_DATA_HIGH();		  
+            recvStat = 0;   //定时器发送测试
+            //testA = 'A';
+            COM_DATA_HIGH();
 
             TIM_Cmd(TIM2, DISABLE);		   //关闭定时器
             return;                            //并返回
         }
 
-					if(recvStat == 1)
-						COM_DATA_LOW();			   //???
-					else
-					{
-             if(testA & 0x01)
-							{
-									testA = (testA >> 1); COM_DATA_HIGH();			
-							}
-									
-							else
-							{
-                  testA = (testA >> 1); COM_DATA_LOW();
-							}
-					}
+        if(recvStat == 1)
+            COM_DATA_LOW();			   //???
+        else
+        {
+            if(testA & 0x01)
+            {
+                testA = (testA >> 1);
+                COM_DATA_HIGH();
+            }
+            else
+            {
+                testA = (testA >> 1);
+                COM_DATA_LOW();
+            }
+        }
     }
 }
 
 
 void TIM2_IRQHandler(void)
-{	
+{
     if(TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET)  //检测是否发生溢出更新事件
     {
         TIM_ClearITPendingBit(TIM2, TIM_FLAG_Update); //清除中断标志
         recvStat++;				   //改变状态机
         if(recvStat == COM_STOP_BIT) 		   //收到停止位
         {
-						//COM_DATA_HIGH();
+            //COM_DATA_HIGH();
+            EmulateSerialBuf[EmulateSerialRx] =  recvData;
+            RemainDataNum = GPS_RX_LEN - EmulateSerialRx;
+
+            EmulateSerialRx++;
+            if(EmulateSerialRx >= GPS_RX_LEN)
+                EmulateSerialRx = 0;
+
+
             TIM_Cmd(TIM2, DISABLE);		   //关闭定时器
             return;                            //并返回
         }
@@ -60,7 +76,7 @@ void TIM2_IRQHandler(void)
         }
         else				          //'0'
         {
-            recvData &= ~(1 <<(recvStat - 1)); 
+            recvData &= ~(1 <<(recvStat - 1));
         }
     }
 }
@@ -80,7 +96,7 @@ void EXTI9_5_IRQHandler(void)
         }
         EXTI_ClearITPendingBit(EXTI_Line5);	        //清除EXTI_Line1中断挂起标志位
     }
-} 
+}
 
 void TIM2_Configuration(u16 period)
 {
@@ -97,12 +113,12 @@ void TIM2_Configuration(u16 period)
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;//设置计数器模式为向上计数模式
     TIM_TimeBaseStructure.TIM_Period = period - 1;  		//设置计数溢出大小，每计period个数就产生一个更新事件
     TIM_TimeBaseInit(TIM2,&TIM_TimeBaseStructure);			//将配置应用到TIM2中
-	
+
     TIM_ClearFlag(TIM2, TIM_FLAG_Update);								//清除溢出中断标志
     TIM_ITConfig(TIM2,TIM_IT_Update,ENABLE);        		//开启TIM2的中断
     TIM_Cmd(TIM2,DISABLE);			        								//关闭定时器TIM2
-	
-	
+
+
     NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;	  	//通道设置为TIM2中断
     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;	//响应式中断优先级0
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;	  	//打开中断
@@ -146,7 +162,7 @@ void VirtualCOM_TX_GPIOConfig(void)
     GPIO_SetBits(COM_TX_PORT, COM_TX_PIN);
 }
 void BSP_Init(void)
-{ 
+{
     static volatile ErrorStatus HSEStartUpStatus = SUCCESS;
 
     RCC_DeInit();     //????SYSCLK, HCLK, PCLK2, PCLK1, ????????
@@ -172,22 +188,22 @@ void BSP_Init(void)
 
 void VirtualCOM_Config(u16 baudRate)
 {
-	uint32_t period;
-	VirtualCOM_TX_GPIOConfig();
+    uint32_t period;
+    VirtualCOM_TX_GPIOConfig();
 
-	VirtualCOM_RX_GPIOConfig();
-	if(baudRate == _300BuadRate)		//???300
-		period = _300BuadRate + 250;
-	else if (baudRate == _600BuadRate)	//???600
-		period =  _600BuadRate + 50;
-	else if (baudRate == _1200BuadRate)	//???1200
-		period =  _1200BuadRate + 50;	
-	else if (baudRate == _4800BuadRate)	//???1200
-		period =  _4800BuadRate + 10 ;	//
-	else if (baudRate == _9600BuadRate)	//???1200
-		period =  _9600BuadRate + 7 ;//103    + 1   最少+ 1，上限是13 ，看图是1.5
-	TIM2_Configuration(period);		//????????????????
-	delayTime = baudRate;			//??IO???????
+    VirtualCOM_RX_GPIOConfig();
+    if(baudRate == _300BuadRate)		//???300
+        period = _300BuadRate + 250;
+    else if (baudRate == _600BuadRate)	//???600
+        period =  _600BuadRate + 50;
+    else if (baudRate == _1200BuadRate)	//???1200
+        period =  _1200BuadRate + 50;
+    else if (baudRate == _4800BuadRate)	//???1200
+        period =  _4800BuadRate + 10 ;	//
+    else if (baudRate == _9600BuadRate)	//???1200
+        period =  _9600BuadRate + 7 ;//103    + 1   最少+ 1，上限是13 ，看图是1.5
+    TIM2_Configuration(period);		//????????????????
+    delayTime = baudRate;			//??IO???????
 }
 
 void Delay_us(uint32_t nus)
@@ -198,11 +214,11 @@ void Delay_us(uint32_t nus)
     SysTick->CTRL=0X00000000;       //?????
     SysTick->VAL=0X00000000;        //?????
 }
- 
+
 void VirtualCOM_ByteSend(uint8_t val)
 {
-		uint8_t i = 0;
-		
+    uint8_t i = 0;
+
     COM_DATA_LOW();			   //???
     Delay_us(delayTime);
     for(i = 0; i < 8; i++)	           //8????

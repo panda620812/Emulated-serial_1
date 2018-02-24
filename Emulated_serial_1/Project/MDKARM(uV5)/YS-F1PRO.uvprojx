@@ -549,20 +549,20 @@
               <FileType>1</FileType>
               <FilePath>..\..\User\bsp\ausart.c</FilePath>
             </File>
+            <File>
+              <FileName>gps_new.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\bsp\gps_new.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>Readme</GroupName>
           <Files>
             <File>
-              <FileName>01.例程功能说明.txt</FileName>
+              <FileName>Readme.txt</FileName>
               <FileType>5</FileType>
-              <FilePath>..\..\Readme\01.例程功能说明.txt</FilePath>
-            </File>
-            <File>
-              <FileName>02.开发环境说明.txt</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\Readme\02.开发环境说明.txt</FilePath>
+              <FilePath>..\..\Readme\Readme.txt</FilePath>
             </File>
           </Files>
         </Group>

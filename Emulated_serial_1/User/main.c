@@ -1,19 +1,4 @@
-/**
-  ******************************************************************************
-  * ÎÄ¼şÃû³Ì: main.c 
-  * ×÷    Õß: Ó²Ê¯Ç¶ÈëÊ½¿ª·¢ÍÅ¶Ó
-  * °æ    ±¾: V1.0
-  * ±àĞ´ÈÕÆÚ: 2015-10-04
-  * ¹¦    ÄÜ: Ê¹ÓÃ±ê×¼¿â·½·¨¿ØÖÆLEDµÆÁÁÃğ
-  ******************************************************************************
-  * ËµÃ÷£º
-  * ±¾Àı³ÌÅäÌ×Ó²Ê¯stm32¿ª·¢°åYS-F1ProÊ¹ÓÃ¡£
-  * 
-  * ÌÔ±¦£º
-  * ÂÛÌ³£ºhttp://www.ing10bbs.com
-  * °æÈ¨¹éÓ²Ê¯Ç¶ÈëÊ½¿ª·¢ÍÅ¶ÓËùÓĞ£¬ÇëÎğÉÌÓÃ¡£
-  ******************************************************************************
-  */
+
 /* °üº¬Í·ÎÄ¼ş ----------------------------------------------------------------*/
 #include "stm32f10x.h"
 #include "ausart.h"
@@ -44,17 +29,17 @@ int main(void)
 
  	BSP_Init();
 
-		VirtualCOM_Config(_4800BuadRate);             //??IO?????????600
+		VirtualCOM_Config(_9600BuadRate);             //??IO?????????600
 
 	//	VirtualCOM_StringSend("HelloWorld!\r\n");   //??“HelloWorld!”???
 		while(1)
 		{
 			//VirtualCOM_StringSend("HelloWorld!\r\n"); 
 			//TIM_Cmd(TIM2, ENABLE);		//¶¨Ê±Æ÷·¢ËÍ²âÊÔ
-//      VirtualCOM_ByteSend('A');
-			VirtualCOM_ByteSend(recvData);
-			Delay(5000000);
-
+			//VirtualCOM_ByteSend('A');
+			//VirtualCOM_ByteSend(recvData);
+			//Delay(5000000);
+           thread_gps ();
 		}
 }
 

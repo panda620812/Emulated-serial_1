@@ -18,6 +18,7 @@
 #define _4800BuadRate	208
 #define _9600BuadRate	103
 
+#define GPS_RX_LEN	128
 
 enum
 {
@@ -27,7 +28,7 @@ enum
     COM_D2_BIT,			 //bit2
     COM_D3_BIT,			 //bit3
     COM_D4_BIT,			 //bit4
-    COM_D5_BIT,			 //bit5
+    COM_D5_BIT,			 //bit5GPS_RX_LEN - EmulateSerialRx
     COM_D6_BIT,			 //bit6
     COM_D7_BIT,			 //bit7
     COM_STOP_BIT,	         //bit8
@@ -47,4 +48,6 @@ void EXTI9_5_IRQHandler(void);
 void TIM2_IRQHandler(void);
 
 void Delay(uint32_t t);
+
+void thread_gps (void );
 
