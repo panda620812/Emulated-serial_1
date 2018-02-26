@@ -18,9 +18,6 @@ void LED_Init(void)
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_Init(GPIOB, &GPIO_InitStructure);
     GPIO_SetBits(GPIOB, GPIO_Pin_12 | GPIO_Pin_13);//
-//	GPIO_SetBits(GPIOB, GPIO_Pin_13);
-//            GPIO_ResetBits(GPIOB, GPIO_Pin_13);
-//            mydelay_ms(500);
 }
 
 
@@ -117,7 +114,7 @@ extern __NO_RETURN void app_main (void *argument);//http://blog.csdn.net/kesalin
 
 const osThreadAttr_t main_thread_attr =
 {
-    .stack_size = 512,		// 512 Words
+    .stack_size = 1024,		// 512 Words
 };
 
 

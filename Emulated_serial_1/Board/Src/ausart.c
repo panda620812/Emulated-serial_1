@@ -18,6 +18,16 @@ void Delay(uint32_t t)
 	while(t--);
 }
 
+//中断屏蔽设置
+// PA 5 ---> Line5
+//en:1，开启;0，关闭;  
+void EmulatedInt(u8 en)
+{
+//    EXTI->PR=1<<5;  //清除LINE5上的中断标志位        //====> EXTI_ClearITPendingBit(EXTI_Line5);	        //清除EXTI_Line1中断挂起标志位
+//    if(en)EXTI->IMR|=1<<5;//不屏蔽line5上的中断
+//    else EXTI->IMR&=~(1<<5);//屏蔽line5上的中断   
+}
+
 // Timer 优先级要相对较高
 void EmulatedSerialNVIC_Configuration(void)
 {
@@ -74,14 +84,13 @@ void TimeTest()//定时器发送
     }
 }
 
-
 void TIM2_IRQHandler(void)
 {
     if(TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET)  //检测是否发生溢出更新事件
     {
         TIM_ClearITPendingBit(TIM2, TIM_FLAG_Update); //清除中断标志
-        recvStat++;				   //改变状态机
-        if(recvStat == COM_STOP_BIT) 		   //收到停止位
+        recvStat++;				   													//改变状态机
+        if(recvStat == COM_STOP_BIT) 		   						//收到停止位
         {
             //COM_DATA_HIGH();
             EmulateSerialBuf[EmulateSerialRx] =  recvData;
@@ -90,8 +99,9 @@ void TIM2_IRQHandler(void)
             EmulateSerialRx++;
             if(EmulateSerialRx >= GPS_RX_LEN)
                 EmulateSerialRx = 0;
-
-
+            
+						EmulatedInt(1);//打开外部Rx中断			
+						
             TIM_Cmd(TIM2, DISABLE);	//关闭定时器
             return;               //并返回
         }
@@ -112,12 +122,12 @@ void EXTI9_5_IRQHandler(void)
     {
         if(!COM_RX_STAT)   //检测引脚高低电平，如果是低电平，则说明检测到下升沿
         {
-					  //关闭中断					
+					  EmulatedInt(0);//关闭中断					
 					
             if(recvStat == COM_STOP_BIT)		//状态为停止位
             {
                 recvStat = COM_START_BIT;	//接收到开始位
-								Delay(100);			//延时一定时间
+								//Delay(100);			//延时一定时间
                 TIM_Cmd(TIM2, ENABLE);		//打开定时器，接收数据
             }
         }
@@ -129,8 +139,8 @@ void TIM2_Configuration(u16 period)
 {
     TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 
-    NVIC_InitTypeDef NVIC_InitStructure;
-
+//    NVIC_InitTypeDef NVIC_InitStructure;
+//		NVIC_SetPriorityGrouping(NVIC_PriorityGroup_3);			//抢占8 子2
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);//使能TIM2的时钟
     TIM_DeInit(TIM2);	                        					//复位TIM2定时器
     TIM_InternalClockConfig(TIM2);											//采用内部时钟给TIM2提供时钟源
@@ -145,11 +155,11 @@ void TIM2_Configuration(u16 period)
     TIM_ITConfig(TIM2,TIM_IT_Update,ENABLE);        		//开启TIM2的中断
     TIM_Cmd(TIM2,DISABLE);			        								//关闭定时器TIM2
 
-
-    NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;	  	//通道设置为TIM2中断
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;	//响应式中断优先级0
-    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;	  	//打开中断
-    NVIC_Init(&NVIC_InitStructure);
+//    NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;	  	//通道设置为TIM2中断
+//    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;	//响应式中断优先级0  
+//		NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+//    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;	  	//打开中断
+//    NVIC_Init(&NVIC_InitStructure);
 }
 
 void VirtualCOM_RX_GPIOConfig(void)
@@ -158,7 +168,7 @@ void VirtualCOM_RX_GPIOConfig(void)
 
     EXTI_InitTypeDef EXTI_InitStruct;
 
-    NVIC_InitTypeDef NVIC_InitStructure;
+//    NVIC_InitTypeDef NVIC_InitStructure;
 
     /* PA5最为数据输入，模拟RX */
     GPIO_InitStructure.GPIO_Pin = COM_RX_PIN;
@@ -172,10 +182,11 @@ void VirtualCOM_RX_GPIOConfig(void)
     EXTI_InitStruct.EXTI_LineCmd=ENABLE;
     EXTI_Init(&EXTI_InitStruct);
 
-    NVIC_InitStructure.NVIC_IRQChannel=EXTI9_5_IRQn;  //外部中断，边沿触发
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 2;
-    NVIC_InitStructure.NVIC_IRQChannelCmd=ENABLE;
-    NVIC_Init(&NVIC_InitStructure);
+//    NVIC_InitStructure.NVIC_IRQChannel=EXTI9_5_IRQn;  //外部中断，边沿触发
+//		NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+//		NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;	
+//    NVIC_InitStructure.NVIC_IRQChannelCmd=ENABLE;
+//    NVIC_Init(&NVIC_InitStructure);
 }
 void VirtualCOM_TX_GPIOConfig(void)
 {

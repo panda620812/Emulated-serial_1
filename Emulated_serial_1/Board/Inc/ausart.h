@@ -18,7 +18,7 @@
 #define _4800BuadRate	208
 #define _9600BuadRate	103
 
-#define GPS_RX_LEN	128
+#define GPS_RX_LEN	256
 
 enum
 {

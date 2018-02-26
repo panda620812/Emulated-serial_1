@@ -9,7 +9,7 @@
 #define GPS_HANDLE		2
 #define GPS_TIMEOUT		3
 #define GPS_OFFLINE		4
-#define GPS_RX_LEN	128
+#define GPS_RX_LEN	256
 
 typedef struct xTIME_STRUCT
 {
@@ -181,8 +181,10 @@ void thread_gps (void)
 //        {
 //            TimeSync--;
 //        }
-        //osDelay (10/ONE_TICK_MS);
-        //len = 0;
+//			osDelay (10/ONE_TICK_MS);
+				
+        len = 0;
+				
         wp = EmulateSerialRx;;
         rp_tmp = rp;
         while(wp != rp_tmp)
@@ -203,7 +205,7 @@ void thread_gps (void)
         {
             idle++;
         }
-        osDelay (100);		//—” ±
+        osDelay (200);		//—” ±
     }
 }
 

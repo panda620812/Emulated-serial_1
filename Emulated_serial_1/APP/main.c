@@ -5,7 +5,8 @@
 #include "board.h"
 #include "stm32f10x.h"
 #include "ausart.h"
-
+#include "FreeRTOS.h"
+#include "task.h"
 int i ;
 float value[4];
 uint16_t temp;
@@ -27,7 +28,15 @@ TestStatus Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength
 /*----------------------------------------------------------------------------
  * Application main thread（线程）
  *---------------------------------------------------------------------------*/
- 
+void vApplicationStackOverflowHook (TaskHandle_t xTask, signed char *pcTaskName)
+{
+//  (void)xTask;
+//  (void)pcTaskName;
+	while(1)
+	{
+	
+	}
+} 
  __NO_RETURN void app_main (void *argument) //osThreadNew 的主线程，或者直接在main中创建线程
 {
 //	uint8_t Ledflag = 0;
@@ -46,7 +55,7 @@ TestStatus Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength
 	while(1)
 	{
 		{
-			thread_gps ()   ; 
+			thread_gps (); 
 			osDelay(1);
 		}
 	}
