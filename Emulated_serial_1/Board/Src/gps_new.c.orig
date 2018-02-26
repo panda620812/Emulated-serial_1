@@ -40,7 +40,7 @@ uint8_t GPS_STATUS;
 void thread_gps (void)
 {
     unsigned short wp, rp, wp_last, i, rp_tmp, len;
-    wp = rp = wp_last = i = rp_tmp = len = 0;
+		wp = rp = wp_last = i = rp_tmp = len = 0;
     char * end, *start;
     GPS_STATUS = GPS_OFFLINE;
 
@@ -79,10 +79,10 @@ void thread_gps (void)
                 for(i=0; i < len; i++)
                 {
                     if(GpsBuf[i] == '$')
-                    {
-                        len = 0;
+										{
+												len = 0;
                         break;
-                    }
+										}
                 }
                 rp = (rp + i) % GPS_RX_LEN;
                 GPS_STATUS = GPS_IDLE;
@@ -99,10 +99,10 @@ void thread_gps (void)
                 GPS_STATUS = GPS_TIMEOUT;
             }
             end = strstr((char*)GpsBuf, "\r\n");
-            if(end == NULL)
+            if(end == NULL) 							
                 break;
             end = end + 2;
-            len = 0;//待修改
+							len = 0;//待修改
             //$GPRMC,083559.00,A,4717.11437,N,00833.91522,E,0.004,77.52,091202,,,A*57
             if(strncmp((char*)GpsBuf, "$GPRMC", 6) == 0)
             {
@@ -188,10 +188,10 @@ void thread_gps (void)
         while(wp != rp_tmp)
         {
             GpsBuf[len] = EmulateSerialBuf[rp_tmp];
-            if(++rp_tmp >= GPS_RX_LEN)
-                rp_tmp = 0;
-            if(++len >= (GPS_RX_LEN-1))
-                break;
+            if(++rp_tmp >= GPS_RX_LEN) 
+							rp_tmp = 0;
+            if(++len >= (GPS_RX_LEN-1)) 
+							break;
         }
         GpsBuf[len] = 0;
         if(wp != wp_last)
@@ -203,7 +203,7 @@ void thread_gps (void)
         {
             idle++;
         }
-        osDelay (100);		//延时
+				osDelay (100);		//延时
     }
 }
 

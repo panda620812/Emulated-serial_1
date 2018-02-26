@@ -33,7 +33,7 @@ enum
     COM_D7_BIT,			 //bit7
     COM_STOP_BIT,	         //bit8
 };
-
+void EmulatedSerialNVIC_Configuration(void);
 void VirtualCOM_ByteSend(uint8_t val);
 void VirtualCOM_TX_GPIOConfig(void);
 void BSP_Init(void);

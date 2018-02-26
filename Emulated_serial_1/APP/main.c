@@ -5,11 +5,7 @@
 #include "board.h"
 #include "stm32f10x.h"
 #include "ausart.h"
-//#include "sd_spi.h"
-//osSemaphoreId_t sid_Thread_Semaphore;                      // semaphore id
-//adc
-extern uint16_t After_filter[4]; 
-extern uint16_t AD_Value[10][4];//次数 通道数
+
 int i ;
 float value[4];
 uint16_t temp;
@@ -18,12 +14,6 @@ float temp2;
 float temp3;
 float temp4;
 float temp5;
-
-uint8_t filter_Adc1 = 0;
-uint8_t filter_Adc2 = 0;
-uint8_t filter_Adc3 = 0;
-uint8_t filter_Adc4 = 0;
-
 
 void AdcProcess(void);
 
@@ -40,7 +30,7 @@ TestStatus Buffercmp(uint8_t* pBuffer1, uint8_t* pBuffer2, uint16_t BufferLength
  
  __NO_RETURN void app_main (void *argument) //osThreadNew 的主线程，或者直接在main中创建线程
 {
-	uint8_t Ledflag = 0;
+//	uint8_t Ledflag = 0;
 // 	io_Semaphore = osSemaphoreNew(1, 1, NULL);//semaphore 
 
 	

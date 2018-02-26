@@ -39,23 +39,23 @@
 */
 void GPIO_PortClock (GPIO_TypeDef *GPIOx, bool enable) {
 
-  if (enable) {
-    if      (GPIOx == GPIOA) RCC->APB2ENR |=  (1U << 2);
-    else if (GPIOx == GPIOB) RCC->APB2ENR |=  (1U << 3);
-    else if (GPIOx == GPIOC) RCC->APB2ENR |=  (1U << 4);
-    else if (GPIOx == GPIOD) RCC->APB2ENR |=  (1U << 5);
-    else if (GPIOx == GPIOE) RCC->APB2ENR |=  (1U << 6);
-    else if (GPIOx == GPIOF) RCC->APB2ENR |=  (1U << 7);
-    else if (GPIOx == GPIOG) RCC->APB2ENR |=  (1U << 8);
-  } else {
-    if      (GPIOx == GPIOA) RCC->APB2ENR &= ~(1U << 2);
-    else if (GPIOx == GPIOB) RCC->APB2ENR &= ~(1U << 3);
-    else if (GPIOx == GPIOC) RCC->APB2ENR &= ~(1U << 4);
-    else if (GPIOx == GPIOD) RCC->APB2ENR &= ~(1U << 5);
-    else if (GPIOx == GPIOE) RCC->APB2ENR &= ~(1U << 6);
-    else if (GPIOx == GPIOF) RCC->APB2ENR &= ~(1U << 7);
-    else if (GPIOx == GPIOG) RCC->APB2ENR &= ~(1U << 8);
-  }
+    if (enable) {
+        if      (GPIOx == GPIOA) RCC->APB2ENR |=  (1U << 2);
+        else if (GPIOx == GPIOB) RCC->APB2ENR |=  (1U << 3);
+        else if (GPIOx == GPIOC) RCC->APB2ENR |=  (1U << 4);
+        else if (GPIOx == GPIOD) RCC->APB2ENR |=  (1U << 5);
+        else if (GPIOx == GPIOE) RCC->APB2ENR |=  (1U << 6);
+        else if (GPIOx == GPIOF) RCC->APB2ENR |=  (1U << 7);
+        else if (GPIOx == GPIOG) RCC->APB2ENR |=  (1U << 8);
+    } else {
+        if      (GPIOx == GPIOA) RCC->APB2ENR &= ~(1U << 2);
+        else if (GPIOx == GPIOB) RCC->APB2ENR &= ~(1U << 3);
+        else if (GPIOx == GPIOC) RCC->APB2ENR &= ~(1U << 4);
+        else if (GPIOx == GPIOD) RCC->APB2ENR &= ~(1U << 5);
+        else if (GPIOx == GPIOE) RCC->APB2ENR &= ~(1U << 6);
+        else if (GPIOx == GPIOF) RCC->APB2ENR &= ~(1U << 7);
+        else if (GPIOx == GPIOG) RCC->APB2ENR &= ~(1U << 8);
+    }
 }
 
 /**
@@ -67,15 +67,29 @@ void GPIO_PortClock (GPIO_TypeDef *GPIOx, bool enable) {
 */
 bool GPIO_GetPortClockState (GPIO_TypeDef *GPIOx) {
 
-  if      (GPIOx == GPIOA) { return ((RCC->APB2ENR &  (1U << 2)) != 0U); }
-  else if (GPIOx == GPIOB) { return ((RCC->APB2ENR &  (1U << 3)) != 0U); }
-  else if (GPIOx == GPIOC) { return ((RCC->APB2ENR &  (1U << 4)) != 0U); }
-  else if (GPIOx == GPIOD) { return ((RCC->APB2ENR &  (1U << 5)) != 0U); }
-  else if (GPIOx == GPIOE) { return ((RCC->APB2ENR &  (1U << 6)) != 0U); }
-  else if (GPIOx == GPIOF) { return ((RCC->APB2ENR &  (1U << 7)) != 0U); }
-  else if (GPIOx == GPIOG) { return ((RCC->APB2ENR &  (1U << 8)) != 0U); }
+    if      (GPIOx == GPIOA) {
+        return ((RCC->APB2ENR &  (1U << 2)) != 0U);
+    }
+    else if (GPIOx == GPIOB) {
+        return ((RCC->APB2ENR &  (1U << 3)) != 0U);
+    }
+    else if (GPIOx == GPIOC) {
+        return ((RCC->APB2ENR &  (1U << 4)) != 0U);
+    }
+    else if (GPIOx == GPIOD) {
+        return ((RCC->APB2ENR &  (1U << 5)) != 0U);
+    }
+    else if (GPIOx == GPIOE) {
+        return ((RCC->APB2ENR &  (1U << 6)) != 0U);
+    }
+    else if (GPIOx == GPIOF) {
+        return ((RCC->APB2ENR &  (1U << 7)) != 0U);
+    }
+    else if (GPIOx == GPIOG) {
+        return ((RCC->APB2ENR &  (1U << 8)) != 0U);
+    }
 
-  return false; 
+    return false;
 }
 
 
@@ -93,37 +107,37 @@ bool GPIO_GetPortClockState (GPIO_TypeDef *GPIOx) {
                false - error
 */
 bool GPIO_PinConfigure(GPIO_TypeDef *GPIOx, uint32_t num, GPIO_CONF conf,
-                                                          GPIO_MODE mode) {
-  __IO uint32_t *reg;
-  if (num > 15) return false;
+                       GPIO_MODE mode) {
+    __IO uint32_t *reg;
+    if (num > 15) return false;
 
-  if (GPIO_GetPortClockState(GPIOx) == false) {
-    /* Enable GPIOx peripheral clock */
-    GPIO_PortClock (GPIOx, true);
-  } 
-
-  if (mode == GPIO_MODE_INPUT) {
-    if      (conf == GPIO_IN_PULL_DOWN) {
-      /* Enable pull down on selected input */
-      GPIOx->ODR &= ~(1 << num);
+    if (GPIO_GetPortClockState(GPIOx) == false) {
+        /* Enable GPIOx peripheral clock */
+        GPIO_PortClock (GPIOx, true);
     }
-    else if (conf == GPIO_IN_PULL_UP) {
-      /* Enable pull up on selected input */
-      conf &= ~1;
-      GPIOx->ODR |=  (1 << num);
-    }
-  }
 
-  if (num < 8) {
-    reg = &GPIOx->CRL;
-  }
-  else {
-    num -= 8;
-    reg = &GPIOx->CRH;
-  }
-  *reg &= ~(0xF << (num << 2));
-  *reg |= ((conf << 2) | mode) << (num << 2);
-  return true;
+    if (mode == GPIO_MODE_INPUT) {
+        if      (conf == GPIO_IN_PULL_DOWN) {
+            /* Enable pull down on selected input */
+            GPIOx->ODR &= ~(1 << num);
+        }
+        else if (conf == GPIO_IN_PULL_UP) {
+            /* Enable pull up on selected input */
+            conf &= ~1;
+            GPIOx->ODR |=  (1 << num);
+        }
+    }
+
+    if (num < 8) {
+        reg = &GPIOx->CRL;
+    }
+    else {
+        num -= 8;
+        reg = &GPIOx->CRH;
+    }
+    *reg &= ~(0xF << (num << 2));
+    *reg |= ((conf << 2) | mode) << (num << 2);
+    return true;
 }
 
 
@@ -133,37 +147,37 @@ bool GPIO_PinConfigure(GPIO_TypeDef *GPIOx, uint32_t num, GPIO_CONF conf,
   \param[in]   af_type Alternate function remap type
 */
 void GPIO_AFConfigure (AFIO_REMAP af_type) {
-           uint32_t msk, val;
-  volatile uint32_t mapr;
+    uint32_t msk, val;
+    volatile uint32_t mapr;
 
-  if (af_type != AFIO_UNAVAILABLE_REMAP) {
-    msk = (af_type >> 5) & 0x07;
-    val = (af_type >> 8) & 0x0F;
+    if (af_type != AFIO_UNAVAILABLE_REMAP) {
+        msk = (af_type >> 5) & 0x07;
+        val = (af_type >> 8) & 0x0F;
 
-    if (!(RCC->APB2ENR & RCC_APB2ENR_AFIOEN)) {
-      /* Enable AFIO peripheral clock */
-      RCC->APB2ENR |= RCC_APB2ENR_AFIOEN;
+        if (!(RCC->APB2ENR & RCC_APB2ENR_AFIOEN)) {
+            /* Enable AFIO peripheral clock */
+            RCC->APB2ENR |= RCC_APB2ENR_AFIOEN;
+        }
+        if (af_type & (1 << 12)) {
+            /* AF remap and debug I/O config register 2 */
+            mapr  = AFIO->MAPR2;
+            mapr &= ~(msk << (af_type & 0x1F));
+            mapr |=  (val << (af_type & 0x1F));
+            AFIO->MAPR2 = mapr;
+        }
+        else {
+            /* AF remap and debug I/O config register */
+            mapr  = AFIO->MAPR;
+            mapr &= ~(msk << (af_type & 0x1F));
+            mapr |=  (val << (af_type & 0x1F));
+
+            /* Serial wire JTAG configuration */
+            msk  =   (AFIO_MAPR_SWJ_CFG_VAL >> 5) & 0x07;
+            val  =   (AFIO_MAPR_SWJ_CFG_VAL >> 8) & 0x0F;
+            mapr &= ~(msk << (AFIO_MAPR_SWJ_CFG_VAL & 0x1F));
+            mapr |=  (val << (AFIO_MAPR_SWJ_CFG_VAL & 0x1F));
+
+            AFIO->MAPR = mapr;
+        }
     }
-    if (af_type & (1 << 12)) {
-      /* AF remap and debug I/O config register 2 */
-      mapr  = AFIO->MAPR2;
-      mapr &= ~(msk << (af_type & 0x1F));
-      mapr |=  (val << (af_type & 0x1F));
-      AFIO->MAPR2 = mapr;
-    }
-    else {
-      /* AF remap and debug I/O config register */
-      mapr  = AFIO->MAPR;
-      mapr &= ~(msk << (af_type & 0x1F));
-      mapr |=  (val << (af_type & 0x1F));
-
-      /* Serial wire JTAG configuration */
-      msk  =   (AFIO_MAPR_SWJ_CFG_VAL >> 5) & 0x07;
-      val  =   (AFIO_MAPR_SWJ_CFG_VAL >> 8) & 0x0F;
-      mapr &= ~(msk << (AFIO_MAPR_SWJ_CFG_VAL & 0x1F));
-      mapr |=  (val << (AFIO_MAPR_SWJ_CFG_VAL & 0x1F));
-
-      AFIO->MAPR = mapr;
-    }
-  }
 }

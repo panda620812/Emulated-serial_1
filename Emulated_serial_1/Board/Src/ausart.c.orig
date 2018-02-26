@@ -17,21 +17,20 @@ void Delay(uint32_t t)
 {
 	while(t--);
 }
-
-// Timer 优先级要相对较高
-void EmulatedSerialNVIC_Configuration(void)
+void NVIC_Configuration(void)
 {
 	NVIC_InitTypeDef NVIC_InitStructure;
-	NVIC_SetPriorityGrouping(NVIC_PriorityGroup_3);//抢占8 子2
- 
-/* Enable the I/O PA5 Interrupt */
+	NVIC_SetPriorityGrouping(NVIC_PriorityGroup_3);//
+
+
+/* Enable the Ä£Äâ½ÓÊÕ´®¿Ú Interrupt 2018Äê2ÔÂ24ÈÕ 18:10:25*/
 	NVIC_InitStructure.NVIC_IRQChannel = EXTI9_5_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
-/* Enable the Timer Interrupt */
+/* Enable the Timer Interrupt 2018Äê2ÔÂ24ÈÕ 18:10:23*/
 	NVIC_InitStructure.NVIC_IRQChannel = TIM2_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;

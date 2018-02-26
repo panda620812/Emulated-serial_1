@@ -56,25 +56,25 @@
 */
 int32_t Buttons_Initialize (void) {
 
-    /* Configure WAKEUP pin */
-    GPIO_PortClock   (WAKEUP_PORT, true);
-    GPIO_PinConfigure(WAKEUP_PORT, WAKEUP_BIT,
-                      GPIO_IN_PULL_DOWN,
-                      GPIO_MODE_INPUT);
+  /* Configure WAKEUP pin */
+  GPIO_PortClock   (WAKEUP_PORT, true);
+  GPIO_PinConfigure(WAKEUP_PORT, WAKEUP_BIT,
+                    GPIO_IN_PULL_DOWN,
+                    GPIO_MODE_INPUT);
+  
+  /* Configure TAMPER pin */
+  GPIO_PortClock   (TAMPER_PORT, true);
+  GPIO_PinConfigure(TAMPER_PORT, TAMPER_BIT,
+                    GPIO_IN_PULL_UP,
+                    GPIO_MODE_INPUT);
 
-    /* Configure TAMPER pin */
-    GPIO_PortClock   (TAMPER_PORT, true);
-    GPIO_PinConfigure(TAMPER_PORT, TAMPER_BIT,
-                      GPIO_IN_PULL_UP,
-                      GPIO_MODE_INPUT);
+  /* Configure USER pin */
+  GPIO_PortClock   (USER_PORT, true);
+  GPIO_PinConfigure(USER_PORT, USER_BIT,
+                    GPIO_IN_PULL_UP,
+                    GPIO_MODE_INPUT);
 
-    /* Configure USER pin */
-    GPIO_PortClock   (USER_PORT, true);
-    GPIO_PinConfigure(USER_PORT, USER_BIT,
-                      GPIO_IN_PULL_UP,
-                      GPIO_MODE_INPUT);
-
-    return 0;
+  return 0;
 }
 
 /**
@@ -85,7 +85,7 @@ int32_t Buttons_Initialize (void) {
    - \b -1: function failed
 */
 int32_t Buttons_Uninitialize (void) {
-    return 0;
+  return 0;
 }
 
 /**
@@ -94,21 +94,21 @@ int32_t Buttons_Uninitialize (void) {
   \returns     Buttons state
 */
 uint32_t Buttons_GetState (void) {
-    uint32_t val = 0;
+  uint32_t val = 0;
 
-    if (GPIO_PinRead(WAKEUP_PORT, WAKEUP_BIT) == 1) {
-        /* Wakeup button */
-        val |= WAKEUP_MASK;
-    }
-    if (GPIO_PinRead(TAMPER_PORT, TAMPER_BIT) == 0) {
-        /* Tamper button */
-        val |= TAMPER_MASK;
-    }
-    if (GPIO_PinRead(USER_PORT, USER_BIT) == 0) {
-        /* User button */
-        val |= USER_MASK;
-    }
-    return (val);
+  if (GPIO_PinRead(WAKEUP_PORT, WAKEUP_BIT) == 1) {
+    /* Wakeup button */
+    val |= WAKEUP_MASK;
+  }
+  if (GPIO_PinRead(TAMPER_PORT, TAMPER_BIT) == 0) {
+    /* Tamper button */
+    val |= TAMPER_MASK;
+  }
+  if (GPIO_PinRead(USER_PORT, USER_BIT) == 0) {
+    /* User button */
+    val |= USER_MASK;
+  }
+  return (val);
 }
 
 /**
@@ -117,5 +117,5 @@ uint32_t Buttons_GetState (void) {
   \return      Number of available buttons
 */
 uint32_t Buttons_GetCount (void) {
-    return BUTTONS_COUNT;
+  return BUTTONS_COUNT;
 }

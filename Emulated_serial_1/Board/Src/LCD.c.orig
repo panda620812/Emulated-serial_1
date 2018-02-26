@@ -2,54 +2,54 @@
 /************************************************
 函数名称 ： CRC-16/IBM 校验 	x16+x15+x2+1
 功    能 :	232串口
-参    数 ：
-返 回 值 ：
-作    者 ：
+参    数 ： 
+返 回 值 ： 
+作    者 ： 
 *************************************************/
 struct DataLCDTxType1 LCDTest;
-//CRC-16/IBM
+//CRC-16/IBM         
 #define PLOY 0xa001 //0x8005 反转//crc16(a,sizeof(a)/sizeof(int)) a是数组
 unsigned short crc16(int *data,int size) {
-    unsigned short crc = 0x0;
-    int data_t ;
-    int i = 0;
-    int j = 0;
-    if(data ==NULL) {
-        return 0;
-    }
-    for(j=0; j<size; j++) {
-        data_t = *data++;
-        crc = (data_t ^ (crc));
-        for(i=0; i<8; i++) {
-            if((crc&0x1)==1) {
-                crc = (crc>>1) ^ PLOY;
-            }
-            else {
-                crc >>= 1;
-            }
-        }
-    }
-    return crc;
-}
+	unsigned short crc = 0x0;
+	int data_t ;
+	int i = 0;
+	int j = 0;
+	if(data ==NULL){
+		return 0;
+	}
+	for(j=0;j<size;j++){
+		data_t = *data++;
+		crc = (data_t ^ (crc));
+		for(i=0;i<8;i++){
+			if((crc&0x1)==1){
+			crc = (crc>>1) ^ PLOY;
+			}
+			else{
+				crc >>= 1;
+			}	
+		}
+	}
+	return crc;
+}	
 /************************************************
 函数名称 ： 初始化发送帧1和帧2
 功    能 :	232串口，数据获取可以根据软件动态获取
-参    数 ：
-返 回 值 ：
-作    者 ：
+参    数 ： 
+返 回 值 ： 
+作    者 ： 
 *************************************************/
 //串口1发送
 void LCDAsk(void)          //发送结束标志
 {
-    uint16_t i;
-    uint16_t eof[4]= {0xcc,0x33,0xc3,0x3c};
+	uint16_t i;
+	uint16_t eof[4]={0xcc,0x33,0xc3,0x3c};
 
-
-    for(i=0; i<4; i++)
-    {
-        USART_SendData(USART1,eof[i]);
-        while(USART_GetFlagStatus(USART1,USART_FLAG_TC)!=SET);  //当状态regist，USART_SR的	TC为set表示发送完成
-    }
+	 
+	for(i=0;i<4;i++)
+	{
+		USART_SendData(USART1,eof[i]);
+		while(USART_GetFlagStatus(USART1,USART_FLAG_TC)!=SET);  //当状态regist，USART_SR的	TC为set表示发送完成
+	}
 }
 
 /*
@@ -96,20 +96,20 @@ void wenbenchange1(void)
 		color[5]=0x00;    //设置背景色    黑
 		send_str(color,6);   //设置前景色   红   背景色    黑
 		en();
-
+		
 		delay_ms(10);
-
+		
 		for(i=0;i<8;i++)
 		{
-
+			
 			wenben1[6]=0x31+i;     //显示数字    1+i；
 			wenben1[5]=0x0a+28*i;   //y坐标下移  28+i；
 			send_str(wenben1,20);    //显示
 			en();
-
+			
 			delay_ms(50);
 		}
-
+		
 	}
 }
 
@@ -162,7 +162,7 @@ void acklcd(void)
 	}
 	USART_RX_STA=0;        //复位有效数据状态位
 }
-*/
+*/		
 /*
 struct Testt
     {
@@ -171,7 +171,7 @@ struct Testt
         char *b;
         int size_b;
     };
-
+ 
     Testt t;
     t.size_a = 10;
     t.size_b = 20;
