@@ -20,6 +20,11 @@
 
 #define GPS_RX_LEN	256
 
+extern uint8_t EmulateSerialBuf[GPS_RX_LEN]; //
+extern uint8_t EmulateSerialLen ;
+extern uint8_t EmulateSerialRx ;
+extern uint16_t RemainDataNum;
+
 enum
 {
     COM_START_BIT,		         //???
@@ -33,6 +38,8 @@ enum
     COM_D7_BIT,			 //bit7
     COM_STOP_BIT,	         //bit8
 };
+
+
 void EmulatedSerialNVIC_Configuration(void);
 void VirtualCOM_ByteSend(uint8_t val);
 void VirtualCOM_TX_GPIOConfig(void);

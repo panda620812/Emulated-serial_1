@@ -155,34 +155,34 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>107</LineNumber>
+          <LineNumber>35</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
+          <Address>134229094</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>..\Board\Src\gps_new.c</Filename>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\APP\main.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression></Expression>
+          <Expression>\\Project\../APP/main.c\35</Expression>
         </Bp>
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>110</LineNumber>
+          <LineNumber>166</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
+          <Address>134218214</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>..\Board\Src\gps_new.c</Filename>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\RTE\Device\STM32F103ZE\startup_stm32f10x_hd.s</Filename>
           <ExecCommand></ExecCommand>
-          <Expression></Expression>
+          <Expression>\\Project\../RTE/Device/STM32F103ZE/startup_stm32f10x_hd.s\166</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -214,7 +214,7 @@
         <Ww>
           <count>5</count>
           <WinNumber>1</WinNumber>
-          <ItemText>EmulateSerialRx</ItemText>
+          <ItemText>EmulateSerialRx,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>6</count>
@@ -225,6 +225,21 @@
           <count>7</count>
           <WinNumber>1</WinNumber>
           <ItemText>rp</ItemText>
+        </Ww>
+        <Ww>
+          <count>8</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>128</ItemText>
+        </Ww>
+        <Ww>
+          <count>9</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>GPS_STATUS</ItemText>
+        </Ww>
+        <Ww>
+          <count>10</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>ticks</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>
@@ -390,7 +405,7 @@
 
   <Group>
     <GroupName>CMSIS-FreeRTOS</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
