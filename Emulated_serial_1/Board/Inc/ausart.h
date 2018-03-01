@@ -1,7 +1,11 @@
-#define COM_TX_PORT	GPIOA
-#define COM_RX_PORT	GPIOA
-#define COM_TX_PIN	GPIO_Pin_4
-#define COM_RX_PIN	GPIO_Pin_5
+#define COM_TX_PORT	GPIOG
+#define COM_RX_PORT	GPIOD
+#define COM_TX_PIN	GPIO_Pin_2
+#define COM_RX_PIN	GPIO_Pin_10
+
+#define EmulateSerialEXTILine    	EXTI_Line10			//EXTI_Line5   
+#define ES_EXTI_LINE_NUM    			10							//5   
+#define ES_EXTI_IRQN  						EXTI15_10_IRQn	//EXTI9_5_IRQn
 
 #define COM_DATA_HIGH()	GPIO_SetBits(COM_TX_PORT, COM_TX_PIN)    //???
 #define COM_DATA_LOW()	GPIO_ResetBits(COM_TX_PORT, COM_TX_PIN)  //???
@@ -21,8 +25,8 @@
 #define GPS_RX_LEN	256
 
 extern uint8_t EmulateSerialBuf[GPS_RX_LEN]; //
-extern uint8_t EmulateSerialLen ;
-extern uint8_t EmulateSerialRx ;
+extern uint16_t EmulateSerialLen ;
+extern uint16_t EmulateSerialRx ;
 extern uint16_t RemainDataNum;
 
 enum
@@ -51,7 +55,7 @@ void VirtualCOM_StringSend(uint8_t *str);
 
 void VirtualCOM_RX_GPIOConfig(void);
 void TIM2_Configuration(u16 period);
-void EXTI9_5_IRQHandler(void);
+void EXTI15_10_IRQHandler(void);
 void TIM2_IRQHandler(void);
 
 void thread_gps (void );

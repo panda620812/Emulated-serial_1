@@ -25,8 +25,8 @@ typedef struct xTIME_STRUCT
 } FF_TimeStruct_t;
 
 extern uint8_t EmulateSerialBuf[GPS_RX_LEN]; //
-extern uint8_t EmulateSerialLen ;
-extern uint8_t EmulateSerialRx ;
+extern uint16_t EmulateSerialLen ;
+extern uint16_t EmulateSerialRx ;
 extern uint16_t RemainDataNum;
 uint8_t GpsBuf[GPS_RX_LEN]; //
 
