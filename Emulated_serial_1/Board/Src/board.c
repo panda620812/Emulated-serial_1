@@ -10,14 +10,14 @@
 #include "ausart.h"
 void LED_Init(void)
 {
-    GPIO_InitTypeDef GPIO_InitStructure;
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+//    GPIO_InitTypeDef GPIO_InitStructure;
+//    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
 
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_13;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-    GPIO_Init(GPIOB, &GPIO_InitStructure);
-    GPIO_SetBits(GPIOB, GPIO_Pin_12 | GPIO_Pin_13);//
+//    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_13;
+//    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+//    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+//    GPIO_Init(GPIOB, &GPIO_InitStructure);
+//    GPIO_SetBits(GPIOB, GPIO_Pin_12 | GPIO_Pin_13);//
 }
 
 
@@ -30,56 +30,56 @@ void LED_Init(void)
 *******************************************************************************/
 void NVIC_Configuration(void)
 {
-    NVIC_InitTypeDef NVIC_InitStructure;
-    NVIC_SetPriorityGrouping(NVIC_PriorityGroup_3);//设定分组方式 抢占8个，子优先级2个
-//__NVIC_SetPriorityGrouping
-//串口与主板连接的要配置成高
-//	Usart1 NVIC 配置
-    NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=3 ;//抢占优先级3
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;		//子优先级3
-    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
-    NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始NVIC寄存器
-//	Usart2 NVIC 配置
-    NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=3 ;//抢占优先级3
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;		//子优先级3
-    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
-    NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始NVIC寄存器
-//	Usart3 NVIC 配置
-    NVIC_InitStructure.NVIC_IRQChannel = USART3_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=3 ;//抢占优先级3
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;		//子优先级3
-    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
-    NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始NVIC寄存器
+//    NVIC_InitTypeDef NVIC_InitStructure;
+//    NVIC_SetPriorityGrouping(NVIC_PriorityGroup_3);//设定分组方式 抢占8个，子优先级2个
+////__NVIC_SetPriorityGrouping
+////串口与主板连接的要配置成高
+////	Usart1 NVIC 配置
+//    NVIC_InitStructure.NVIC_IRQChannel = USART1_IRQn;
+//    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=3 ;//抢占优先级3
+//    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;		//子优先级3
+//    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
+//    NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始NVIC寄存器
+////	Usart2 NVIC 配置
+//    NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
+//    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=3 ;//抢占优先级3
+//    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;		//子优先级3
+//    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
+//    NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始NVIC寄存器
+////	Usart3 NVIC 配置
+//    NVIC_InitStructure.NVIC_IRQChannel = USART3_IRQn;
+//    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=3 ;//抢占优先级3
+//    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;		//子优先级3
+//    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
+//    NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始NVIC寄存器
 
-//	Usart4 NVIC 配置
-    NVIC_InitStructure.NVIC_IRQChannel = UART4_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=3 ;//抢占优先级3
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;		//子优先级3
-    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
-    NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始NVIC寄存器
-//	Usart5 NVIC 配置
-    NVIC_InitStructure.NVIC_IRQChannel = UART5_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=3 ;//抢占优先级3
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;		//子优先级3
-    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
-    NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始NVIC寄存器
+////	Usart4 NVIC 配置
+//    NVIC_InitStructure.NVIC_IRQChannel = UART4_IRQn;
+//    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=3 ;//抢占优先级3
+//    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;		//子优先级3
+//    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
+//    NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始NVIC寄存器
+////	Usart5 NVIC 配置
+//    NVIC_InitStructure.NVIC_IRQChannel = UART5_IRQn;
+//    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority=3 ;//抢占优先级3
+//    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;		//子优先级3
+//    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
+//    NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始NVIC寄存器
 
 
-    //DMA发送中断设置
-    NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel6_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-    NVIC_Init(&NVIC_InitStructure);
+//    //DMA发送中断设置
+//    NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel6_IRQn;
+//    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
+//    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+//    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+//    NVIC_Init(&NVIC_InitStructure);
 
-    /* Enable the RTC Interrupt */
-    NVIC_InitStructure.NVIC_IRQChannel = RTC_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-    NVIC_Init(&NVIC_InitStructure);
+//    /* Enable the RTC Interrupt */
+//    NVIC_InitStructure.NVIC_IRQChannel = RTC_IRQn;
+//    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
+//    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+//    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+//    NVIC_Init(&NVIC_InitStructure);
 
 }
 

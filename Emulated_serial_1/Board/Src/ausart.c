@@ -5,15 +5,13 @@ uint32_t  sometime = 0;
 
 uint8_t recvStat = COM_STOP_BIT;			//定义状态机
 uint8_t recvData;
-//uint8_t val = 'A';
+uint8_t val = 'A';
 uint8_t testA = 'A';
 
-
-
-uint8_t 	EmulateSerialBuf[GPS_RX_LEN]; //
-uint16_t 	EmulateSerialLen 	= 0;
-uint16_t 	EmulateSerialRx 	= 0; //接收自增
-uint16_t 	RemainDataNum 		= 0;
+uint8_t EmulateSerialBuf[GPS_RX_LEN]; //
+uint16_t EmulateSerialLen = 0;
+uint16_t EmulateSerialRx = 0; //接收自增
+uint16_t RemainDataNum = 0;
 
 void Delay(uint32_t t)
 {
@@ -21,13 +19,13 @@ void Delay(uint32_t t)
 }
 
 //中断屏蔽设置
-//PA 5 ---> Line5
+// PA 5 ---> Line5
 //en:1，开启;0，关闭;  
-void EmulatedInt(unsigned char en)
+void EmulatedInt(u8 en)
 {
-//    EXTI->PR=1<<ES_EXTI_LINE_NUM;  //清除LINE5上的中断标志位        //====> EXTI_ClearITPendingBit(EmulateSerialEXTILine);	        //清除EXTI_Line1中断挂起标志位
-//    if(en)EXTI->IMR|=1<<ES_EXTI_LINE_NUM;//不屏蔽line5上的中断
-//    else EXTI->IMR&=~(1<<ES_EXTI_LINE_NUM);//屏蔽line5上的中断   
+//    EXTI->PR=1<<5;  //清除LINE5上的中断标志位        //====> EXTI_ClearITPendingBit(EXTI_LineX);	        //清除EXTI_Line1中断挂起标志位
+//    if(en)EXTI->IMR|=1<<5;//不屏蔽line5上的中断
+//    else EXTI->IMR&=~(1<<5);//屏蔽line5上的中断   
 }
 
 // Timer 优先级要相对较高
@@ -37,7 +35,7 @@ void EmulatedSerialNVIC_Configuration(void)
 	NVIC_SetPriorityGrouping(NVIC_PriorityGroup_3);//抢占8 子2
  
 /* Enable the I/O PA5 Interrupt */
-	NVIC_InitStructure.NVIC_IRQChannel = ES_EXTI_IRQN;
+	NVIC_InitStructure.NVIC_IRQChannel = EXTI_NUM_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
@@ -49,9 +47,7 @@ void EmulatedSerialNVIC_Configuration(void)
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
-	
-	
-	VirtualCOM_Config(_9600BuadRate);
+
 }
 
 void TimeTest()//定时器发送
@@ -101,7 +97,7 @@ void TIM2_IRQHandler(void)
             RemainDataNum = GPS_RX_LEN - EmulateSerialRx;
 
             EmulateSerialRx++;
-            if(EmulateSerialRx 		>= GPS_RX_LEN)
+            if( EmulateSerialRx >= GPS_RX_LEN)
                 EmulateSerialRx = 0;
             
 						EmulatedInt(1);//打开外部Rx中断			
@@ -119,9 +115,11 @@ void TIM2_IRQHandler(void)
         }
     }
 }
-void EXTI15_10_IRQHandler(void) //EXTI15_10_IRQn
+
+//void EXTI9_5_IRQHandler(void)
+void EXTI15_10_IRQHandler(void)
 {
-    if(EXTI_GetITStatus(EmulateSerialEXTILine)!=RESET)
+    if(EXTI_GetITStatus( EXTI_LineX)!=RESET)
     {
         if(!COM_RX_STAT)   //检测引脚高低电平，如果是低电平，则说明检测到下升沿
         {
@@ -130,20 +128,20 @@ void EXTI15_10_IRQHandler(void) //EXTI15_10_IRQn
             if(recvStat == COM_STOP_BIT)		//状态为停止位
             {
                 recvStat = COM_START_BIT;	//接收到开始位
-								Delay(100);			//延时一定时间
+								//Delay(100);			//延时一定时间
                 TIM_Cmd(TIM2, ENABLE);		//打开定时器，接收数据
             }
         }
-        EXTI_ClearITPendingBit(EmulateSerialEXTILine);	        //清除EXTI_Line1中断挂起标志位
+        EXTI_ClearITPendingBit(EXTI_LineX);	        //清除EXTI_Line1中断挂起标志位
     }
 }
 
-void TIM2_Configuration(unsigned short period)
+void TIM2_Configuration(u16 period)
 {
     TIM_TimeBaseInitTypeDef TIM_TimeBaseStructure;
 
-//  NVIC_InitTypeDef NVIC_InitStructure;
-//	NVIC_SetPriorityGrouping(NVIC_PriorityGroup_3);			//抢占8 子2
+//    NVIC_InitTypeDef NVIC_InitStructure;
+//		NVIC_SetPriorityGrouping(NVIC_PriorityGroup_3);			//抢占8 子2
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);//使能TIM2的时钟
     TIM_DeInit(TIM2);	                        					//复位TIM2定时器
     TIM_InternalClockConfig(TIM2);											//采用内部时钟给TIM2提供时钟源
@@ -178,14 +176,19 @@ void VirtualCOM_RX_GPIOConfig(void)
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(COM_RX_PORT, &GPIO_InitStructure);
-
-    EXTI_InitStruct.EXTI_Line=EmulateSerialEXTILine;
+	
+	
+//	void GPIO_EXTILineConfig(uint8_t GPIO_PortSource, uint8_t GPIO_PinSource)
+		GPIO_EXTILineConfig(_EXTI_LineX_GPIO_PortSource, _EXTI_LineX_GPIO_PinSource );
+	
+	
+    EXTI_InitStruct.EXTI_Line=EXTI_LineX;
     EXTI_InitStruct.EXTI_Mode=EXTI_Mode_Interrupt;
     EXTI_InitStruct.EXTI_Trigger=EXTI_Trigger_Falling;//下降沿都中断
     EXTI_InitStruct.EXTI_LineCmd=ENABLE;
     EXTI_Init(&EXTI_InitStruct);
 
-//    NVIC_InitStructure.NVIC_IRQChannel=ES_EXTI_IRQN;  //外部中断，边沿触发
+//    NVIC_InitStructure.NVIC_IRQChannel=EXTI_NUM_IRQn;  //外部中断，边沿触发
 //		NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
 //		NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;	
 //    NVIC_InitStructure.NVIC_IRQChannelCmd=ENABLE;
@@ -194,6 +197,7 @@ void VirtualCOM_RX_GPIOConfig(void)
 void VirtualCOM_TX_GPIOConfig(void)
 {
     GPIO_InitTypeDef GPIO_InitStructure;
+
     /* PA4???????,??TX */
     GPIO_InitStructure.GPIO_Pin = COM_TX_PIN;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
@@ -222,11 +226,11 @@ void BSP_Init(void)
         RCC_SYSCLKConfig(RCC_SYSCLKSource_PLLCLK);//?????????????
         while(RCC_GetSYSCLKSource() != 0x08) {}   //??????
     }												//??GPIO???????
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOB|RCC_APB2Periph_GPIOC|RCC_APB2Periph_GPIOD|RCC_APB2Periph_GPIOE|RCC_APB2Periph_GPIOF|RCC_APB2Periph_GPIOG, ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOB|RCC_APB2Periph_GPIOC|RCC_APB2Periph_GPIOD|RCC_APB2Periph_GPIOE|RCC_APB2Periph_GPIOF|RCC_APB2Periph_GPIOG|RCC_APB2Periph_AFIO, ENABLE);
 }
 
 
-void VirtualCOM_Config(unsigned short baudRate)
+void VirtualCOM_Config(u16 baudRate)
 {
     uint32_t period;
     VirtualCOM_TX_GPIOConfig();
